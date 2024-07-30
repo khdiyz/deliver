@@ -1,0 +1,216 @@
+basePath: /
+definitions:
+  models.BaseResponse:
+    properties:
+      data: {}
+      description:
+        type: string
+      message:
+        type: string
+      pagination:
+        $ref: '#/definitions/models.Pagination'
+      status:
+        type: string
+      success:
+        type: boolean
+    type: object
+  models.LoginRequest:
+    properties:
+      email:
+        default: khdiyz.12@gmail.com
+        type: string
+      password:
+        default: Secret@12
+        type: string
+    required:
+    - password
+    type: object
+  models.Pagination:
+    properties:
+      item_total:
+        type: integer
+      page:
+        default: 1
+        type: integer
+      page_size:
+        default: 10
+        type: integer
+      page_total:
+        type: integer
+    type: object
+  models.RefreshRequest:
+    properties:
+      token:
+        type: string
+    required:
+    - token
+    type: object
+  models.UserCreateRequest:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      password:
+        type: string
+      role_id:
+        type: integer
+    required:
+    - full_name
+    - password
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API Server for Application
+  title: EduSync API
+  version: "1.0"
+paths:
+  /api/v1/minio/upload-image:
+    post:
+      consumes:
+      - application/json
+      - multipart/form-data
+      description: Upload Image
+      parameters:
+      - description: file
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/octet-stream
+      - image/png
+      - image/jpeg
+      - image/jpg
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      tags:
+      - Minio
+  /api/v1/users:
+    post:
+      consumes:
+      - application/json
+      description: Create User
+      parameters:
+      - description: Create User
+        in: body
+        name: create
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create User
+      tags:
+      - User
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login User
+      parameters:
+      - description: Login
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      summary: Login User
+      tags:
+      - Auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refresh Token
+      parameters:
+      - description: Refresh Token
+        in: body
+        name: token
+        required: true
+        schema:
+          $ref: '#/definitions/models.RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      summary: Refresh Token
+      tags:
+      - Auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
