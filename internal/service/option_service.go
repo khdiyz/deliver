@@ -2,8 +2,8 @@ package service
 
 import (
 	"deliver/internal/constants"
+	"deliver/internal/models"
 	"deliver/internal/repository"
-	"deliver/models"
 	"deliver/pkg/logger"
 
 	"google.golang.org/grpc/codes"

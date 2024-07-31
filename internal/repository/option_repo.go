@@ -2,7 +2,7 @@ package repository
 
 import (
 	"deliver/internal/constants"
-	"deliver/models"
+	"deliver/internal/models"
 	"deliver/pkg/logger"
 	"strconv"
 	"strings"

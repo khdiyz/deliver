@@ -2,8 +2,9 @@ package repository
 
 import (
 	"deliver/internal/constants"
-	"deliver/models"
+	"deliver/internal/models"
 	"deliver/pkg/logger"
+	"encoding/json"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -48,9 +49,22 @@ func (r *CategoryRepo) GetList(pagination *models.Pagination) ([]models.Category
 
 	query := `
 	SELECT
-		id,
-		name
-	FROM categories 
+	    c.id,
+	    c.name,
+	    COALESCE(
+	        json_agg(
+	            json_build_object(
+	                'id', p.id,
+	                'name', p.name,
+	                'description', p.description, 
+	                'photo', p.photo,
+	                'price', p.price
+	            ) 
+	        ) FILTER (WHERE p.id IS NOT NULL), '[]'::json
+	    ) AS products
+	FROM categories c
+	LEFT JOIN products p ON c.id = p.category_id 
+	GROUP BY c.id, c.name
 	LIMIT $1 OFFSET $2;`
 
 	rows, err := r.db.Query(query, pagination.Limit, pagination.Offset)
@@ -60,11 +74,21 @@ func (r *CategoryRepo) GetList(pagination *models.Pagination) ([]models.Category
 	}
 
 	for rows.Next() {
-		var category models.Category
+		var (
+			category     models.Category
+			productsData []byte
+		)
 		if rows.Scan(
 			&category.Id,
 			&category.Name,
+			&productsData,
 		); err != nil {
+			r.log.Error(err)
+			return nil, err
+		}
+
+		err = json.Unmarshal(productsData, &category.Products)
+		if err != nil {
 			r.log.Error(err)
 			return nil, err
 		}

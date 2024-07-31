@@ -45,7 +45,7 @@ func (um *UploadMinio) UploadImage(image io.Reader, imageSize int64, contentType
 	}
 
 	// Generate the link for the uploaded image
-	file.Link = GenerateLink(*um.cfg, file.Name)
+	file.Link = GenerateLink(um.cfg, file.Name)
 
 	return file, nil
 }
@@ -67,7 +67,7 @@ func (um *UploadMinio) UploadDoc(doc io.Reader, docSize int64, contentType strin
 	}
 
 	// Generate the link for the uploaded document
-	file.Link = GenerateLink(*um.cfg, file.Name)
+	file.Link = GenerateLink(um.cfg, file.Name)
 
 	return file, nil
 }
@@ -89,7 +89,7 @@ func (um *UploadMinio) UploadExcel(excel io.Reader, excelSize int64, contentType
 	}
 
 	// Generate the link for the uploaded Excel file
-	file.Link = GenerateLink(*um.cfg, file.Name)
+	file.Link = GenerateLink(um.cfg, file.Name)
 
 	return file, nil
 }

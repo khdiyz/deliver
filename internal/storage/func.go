@@ -63,7 +63,7 @@ func (um *UploadMinio) uploadToMinio(fileName string, file io.Reader, fileSize i
 	return err
 }
 
-func GenerateLink(cfg config.Config, fileName string) string {
+func GenerateLink(cfg *config.Config, fileName string) string {
 	if fileName == "" {
 		return ""
 	}

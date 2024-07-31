@@ -2,7 +2,7 @@ package handler
 
 import (
 	"deliver/internal/handler/response"
-	"deliver/models"
+	"deliver/internal/models"
 	"deliver/pkg/validator"
 
 	"github.com/gin-gonic/gin"

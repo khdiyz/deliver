@@ -2,8 +2,9 @@ package repository
 
 import (
 	"deliver/internal/constants"
-	"deliver/models"
+	"deliver/internal/models"
 	"deliver/pkg/logger"
+	"encoding/json"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -101,15 +102,37 @@ func (r *ProductRepo) GetById(id int64) (models.Product, error) {
 
 	query := `
 	SELECT
-		id,
-		name,
-		category_id,
-		description,
-		photo,
-		price
-	FROM products 
-	WHERE
-		id = $1;`
+	    p.id,
+	    p.name,
+	    p.category_id,
+	    p.description,
+	    p.photo,
+	    p.price,
+	    COALESCE(
+	        json_agg(
+	            json_build_object(
+	                'id', a.id,
+	                'name', a.name,
+	                'options', (
+	                    SELECT COALESCE(json_agg(
+	                        json_build_object(
+	                            'id', o.id,
+	                            'name', o.name
+	                        )
+	                    ), '[]'::json)
+	                    FROM options o
+	                    WHERE o.attribute_id = a.id
+	                )
+	            )
+	        ) FILTER (WHERE a.id IS NOT NULL), '[]'::json
+	    ) AS attributes
+	FROM products p
+	LEFT JOIN product_attributes pa ON p.id = pa.product_id
+	LEFT JOIN attributes a ON pa.attribute_id = a.id
+	WHERE p.id = $1
+	GROUP BY p.id, p.name, p.category_id, p.description, p.photo, p.price;`
+
+	var attributesData []byte
 
 	if err := r.db.QueryRow(query, id).Scan(
 		&product.Id,
@@ -118,7 +141,14 @@ func (r *ProductRepo) GetById(id int64) (models.Product, error) {
 		&product.Description,
 		&product.Photo,
 		&product.Price,
+		&attributesData,
 	); err != nil {
+		r.log.Error(err)
+		return models.Product{}, err
+	}
+
+	err := json.Unmarshal(attributesData, &product.Attributes)
+	if err != nil {
 		r.log.Error(err)
 		return models.Product{}, err
 	}

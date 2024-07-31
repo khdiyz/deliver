@@ -2,9 +2,11 @@ package service
 
 import (
 	"database/sql"
+	"deliver/config"
 	"deliver/internal/constants"
+	"deliver/internal/models"
 	"deliver/internal/repository"
-	"deliver/models"
+	"deliver/internal/storage"
 	"deliver/pkg/logger"
 	"errors"
 
@@ -14,12 +16,14 @@ import (
 type ProductService struct {
 	repo repository.Repository
 	log  logger.Logger
+	cfg  *config.Config
 }
 
-func NewProductService(repo repository.Repository, log logger.Logger) *ProductService {
+func NewProductService(repo repository.Repository, log logger.Logger, cfg config.Config) *ProductService {
 	return &ProductService{
 		repo: repo,
 		log:  log,
+		cfg:  &cfg,
 	}
 }
 
@@ -38,6 +42,10 @@ func (s *ProductService) GetList(pagination *models.Pagination) ([]models.Produc
 		return nil, serviceError(err, codes.Internal)
 	}
 
+	for i := range products {
+		products[i].Photo = storage.GenerateLink(s.cfg, products[i].Photo)
+	}
+
 	return products, nil
 }
 
@@ -46,6 +54,8 @@ func (s *ProductService) GetById(id int64) (models.Product, error) {
 	if err != nil {
 		return models.Product{}, serviceError(err, codes.Internal)
 	}
+
+	product.Photo = storage.GenerateLink(s.cfg, product.Photo)
 
 	return product, nil
 }

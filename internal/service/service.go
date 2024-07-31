@@ -1,9 +1,10 @@
 package service
 
 import (
+	"deliver/config"
+	"deliver/internal/models"
 	"deliver/internal/repository"
 	"deliver/internal/storage"
-	"deliver/models"
 	"deliver/pkg/logger"
 	"io"
 	"time"
@@ -20,14 +21,14 @@ type Service struct {
 	Option
 }
 
-func NewService(repo repository.Repository, storage storage.Storage, log logger.Logger) *Service {
+func NewService(repo repository.Repository, storage storage.Storage, log logger.Logger, cfg config.Config) *Service {
 	return &Service{
 		Authorization: NewAuthService(repo, log),
 		User:          NewUserService(repo, log),
 		Minio:         NewMinioService(storage, log),
 		Role:          NewRoleService(repo, log),
 		Category:      NewCategoryService(repo, log),
-		Product:       NewProductService(repo, log),
+		Product:       NewProductService(repo, log, cfg),
 		Attribute:     NewAttributeService(repo, log),
 		Option:        NewOptionService(repo, log),
 	}

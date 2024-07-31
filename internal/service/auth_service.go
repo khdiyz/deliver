@@ -5,7 +5,7 @@ import (
 	"deliver/config"
 	"deliver/internal/constants"
 	"deliver/internal/repository"
-	"deliver/models"
+	"deliver/internal/models"
 	"deliver/pkg/helper"
 	"deliver/pkg/logger"
 	"errors"

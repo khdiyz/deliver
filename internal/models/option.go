@@ -3,7 +3,7 @@ package models
 type Option struct {
 	Id          int64  `json:"id"`
 	Name        string `json:"name"`
-	AttributeId int64  `json:"attribute_id"`
+	AttributeId int64  `json:"attribute_id,omitempty"`
 }
 
 type OptionCreateRequest struct {

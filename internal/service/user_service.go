@@ -1,8 +1,8 @@
 package service
 
 import (
+	"deliver/internal/models"
 	"deliver/internal/repository"
-	"deliver/models"
 	"deliver/pkg/helper"
 	"deliver/pkg/logger"
 	"errors"

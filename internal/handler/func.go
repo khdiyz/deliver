@@ -2,7 +2,7 @@ package handler
 
 import (
 	"deliver/internal/constants"
-	"deliver/models"
+	"deliver/internal/models"
 	"deliver/pkg/logger"
 	"errors"
 	"fmt"

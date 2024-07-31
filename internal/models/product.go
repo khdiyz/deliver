@@ -1,12 +1,13 @@
 package models
 
 type Product struct {
-	Id          int64  `json:"id"`
-	Name        string `json:"name"`
-	CategoryId  int64  `json:"category_id"`
-	Description string `json:"description"`
-	Photo       string `json:"photo"`
-	Price       int    `json:"price"`
+	Id          int64       `json:"id"`
+	Name        string      `json:"name"`
+	CategoryId  int64       `json:"category_id,omitempty"`
+	Description string      `json:"description"`
+	Photo       string      `json:"photo"`
+	Price       int         `json:"price"`
+	Attributes  []Attribute `json:"attributes,omitempty"`
 }
 
 type ProductCreateRequest struct {

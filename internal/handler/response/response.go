@@ -1,7 +1,7 @@
 package response
 
 import (
-	"deliver/models"
+	"deliver/internal/models"
 	"errors"
 
 	"github.com/gin-gonic/gin"

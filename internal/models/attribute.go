@@ -1,8 +1,9 @@
 package models
 
 type Attribute struct {
-	Id   int64  `json:"id"`
-	Name string `json:"name"`
+	Id      int64    `json:"id"`
+	Name    string   `json:"name"`
+	Options []Option `json:"options,omitempty"`
 }
 
 type AttributeCreateRequest struct {

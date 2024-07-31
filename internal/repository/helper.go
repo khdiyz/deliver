@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"deliver/models"
+	"deliver/internal/models"
 	"deliver/pkg/logger"
 	"math"
 
