@@ -10,18 +10,18 @@ type Product struct {
 }
 
 type ProductCreateRequest struct {
-	Name        string `json:"name"`
+	Name        string `json:"name" validate:"required"`
 	CategoryId  int64  `json:"category_id"`
 	Description string `json:"description"`
-	Photo       string `json:"photo"`
+	Photo       string `json:"photo" validate:"required"`
 	Price       int    `json:"price"`
 }
 
 type ProductUpdateRequest struct {
 	Id          int64  `json:"-"`
-	Name        string `json:"name"`
+	Name        string `json:"name" validate:"required"`
 	CategoryId  int64  `json:"category_id"`
 	Description string `json:"description"`
-	Photo       string `json:"photo"`
+	Photo       string `json:"photo" validate:"required"`
 	Price       int    `json:"price"`
 }

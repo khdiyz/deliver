@@ -6,10 +6,10 @@ type Category struct {
 }
 
 type CategoryCreateRequest struct {
-	Name string `json:"name"`
+	Name string `json:"name" validate:"required"`
 }
 
 type CategoryUpdateRequest struct {
 	Id   int64  `json:"-"`
-	Name string `json:"name"`
+	Name string `json:"name" validate:"required"`
 }

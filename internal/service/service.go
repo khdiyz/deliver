@@ -14,6 +14,8 @@ type Service struct {
 	User
 	Minio
 	Role
+	Category
+	Product
 }
 
 func NewService(repo repository.Repository, storage storage.Storage, log logger.Logger) *Service {
@@ -22,6 +24,8 @@ func NewService(repo repository.Repository, storage storage.Storage, log logger.
 		User:          NewUserService(repo, log),
 		Minio:         NewMinioService(storage, log),
 		Role:          NewRoleService(repo, log),
+		Category:      NewCategoryService(repo, log),
+		Product:       NewProductService(repo, log),
 	}
 }
 
@@ -46,4 +50,20 @@ type Minio interface {
 
 type Role interface {
 	GetList(pagination *models.Pagination) ([]models.Role, error)
+}
+
+type Category interface {
+	Create(category models.CategoryCreateRequest) (int64, error)
+	GetList(pagination *models.Pagination) ([]models.Category, error)
+	GetById(id int64) (models.Category, error)
+	Update(category models.CategoryUpdateRequest) error
+	DeleteById(id int64) error
+}
+
+type Product interface {
+	Create(product models.ProductCreateRequest) (int64, error)
+	GetList(pagination *models.Pagination) ([]models.Product, error)
+	GetById(id int64) (models.Product, error)
+	Update(product models.ProductUpdateRequest) error
+	DeleteById(id int64) error
 }

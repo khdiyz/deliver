@@ -61,8 +61,8 @@ func (s *AuthService) CreateToken(user models.User, tokenType string, expiresAt 
 }
 
 func (s *AuthService) GenerateTokens(user models.User) (*models.Token, *models.Token, error) {
-	accessExpiresAt := time.Now().Add(time.Duration(config.GetConfig().JWTAccessExpirationHours) * time.Minute)
-	refreshExpiresAt := time.Now().Add(time.Duration(config.GetConfig().JWTRefreshExpirationDays) * time.Minute)
+	accessExpiresAt := time.Now().Add(time.Duration(config.GetConfig().JWTAccessExpirationHours) * time.Hour)
+	refreshExpiresAt := time.Now().Add(time.Duration(config.GetConfig().JWTRefreshExpirationDays) * time.Hour * 24)
 
 	accessToken, err := s.CreateToken(user, constants.TokenTypeAccess, accessExpiresAt)
 	if err != nil {

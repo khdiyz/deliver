@@ -56,6 +56,24 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		{
 			role.GET("", h.getListRole)
 		}
+
+		category := api.Group("/categories")
+		{
+			category.POST("", h.createCategory)
+			category.GET("", h.getListCategory)
+			category.GET("/:id", h.getCategoryById)
+			category.PUT("/:id", h.updateCategory)
+			category.DELETE("/:id", h.deleteCategory)
+		}
+
+		product := api.Group("/products")
+		{
+			product.POST("", h.createProduct)
+			product.GET("", h.getListProduct)
+			product.GET("/:id", h.getProductById)
+			product.PUT("/:id", h.updateProduct)
+			product.DELETE("/:id", h.deleteProduct)
+		}
 	}
 
 	return router

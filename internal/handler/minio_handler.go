@@ -16,6 +16,7 @@ const (
 	jpgContentType  = "image/jpg"
 	pngContentType  = "image/png"
 	jpegContentType = "image/jpeg"
+	webpContentType = "image/webp"
 	xlsxContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 	xlsContentType  = "application/vnd.ms-excel"
 	docContentType  = "application/msword"
@@ -47,7 +48,7 @@ func (h *Handler) uploadImage(c *gin.Context) {
 	}
 
 	imageContentType := file.Header[contentType][0]
-	if imageContentType != jpegContentType && imageContentType != jpgContentType && imageContentType != pngContentType {
+	if imageContentType != jpegContentType && imageContentType != jpgContentType && imageContentType != pngContentType && imageContentType != webpContentType {
 		response.ErrorResponse(c, response.BadRequest, errors.New("invalid file format"))
 		return
 	}
