@@ -1,5 +1,19 @@
 basePath: /
 definitions:
+  models.AttributeCreateRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  models.AttributeUpdateRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
   models.BaseResponse:
     properties:
       data: {}
@@ -38,6 +52,20 @@ definitions:
         type: string
     required:
     - password
+    type: object
+  models.OptionCreateRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  models.OptionUpdateRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
     type: object
   models.Pagination:
     properties:
@@ -112,6 +140,403 @@ info:
   title: EduSync API
   version: "1.0"
 paths:
+  /api/v1/attributes:
+    get:
+      consumes:
+      - application/json
+      description: Get List Attribute
+      parameters:
+      - default: 10
+        description: pageSize
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - default: 1
+        description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List Attribute
+      tags:
+      - Attribute
+    post:
+      consumes:
+      - application/json
+      description: Create Attribute
+      parameters:
+      - description: Create Attribute
+        in: body
+        name: create
+        required: true
+        schema:
+          $ref: '#/definitions/models.AttributeCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Attribute
+      tags:
+      - Attribute
+  /api/v1/attributes/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Attribute
+      parameters:
+      - description: Attribute Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Attribute
+      tags:
+      - Attribute
+    get:
+      consumes:
+      - application/json
+      description: Get Attribute By Id
+      parameters:
+      - description: Attribute Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Attribute By Id
+      tags:
+      - Attribute
+    put:
+      consumes:
+      - application/json
+      description: Update Attribute
+      parameters:
+      - description: Attribute Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Attribute
+        in: body
+        name: update
+        required: true
+        schema:
+          $ref: '#/definitions/models.AttributeUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Attribute
+      tags:
+      - Attribute
+  /api/v1/attributes/{id}/options:
+    get:
+      consumes:
+      - application/json
+      description: Get List Option
+      parameters:
+      - description: Attribute Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - default: 10
+        description: pageSize
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - default: 1
+        description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List Option
+      tags:
+      - Option
+    post:
+      consumes:
+      - application/json
+      description: Create Option
+      parameters:
+      - description: Attribute Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Create Option
+        in: body
+        name: create
+        required: true
+        schema:
+          $ref: '#/definitions/models.OptionCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Option
+      tags:
+      - Option
+  /api/v1/attributes/{id}/options/{option-id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Option
+      parameters:
+      - description: Attribute Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Option Id
+        in: path
+        name: option-id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Option
+      tags:
+      - Option
+    get:
+      consumes:
+      - application/json
+      description: Get Option By Id
+      parameters:
+      - description: Attribute Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Option Id
+        in: path
+        name: option-id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Option By Id
+      tags:
+      - Option
+    put:
+      consumes:
+      - application/json
+      description: Update Option
+      parameters:
+      - description: Attribute Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Option Id
+        in: path
+        name: option-id
+        required: true
+        type: integer
+      - description: Update Option
+        in: body
+        name: update
+        required: true
+        schema:
+          $ref: '#/definitions/models.OptionUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Option
+      tags:
+      - Option
   /api/v1/auth/login:
     post:
       consumes:

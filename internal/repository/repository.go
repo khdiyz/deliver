@@ -12,14 +12,18 @@ type Repository struct {
 	Role
 	Category
 	Product
+	Attribute
+	Option
 }
 
 func NewRepository(db *sqlx.DB, log logger.Logger) *Repository {
 	return &Repository{
-		User:     NewUserRepo(db, log),
-		Role:     NewRoleRepo(db, log),
-		Category: NewCategoryRepo(db, log),
-		Product:  NewProductRepo(db, log),
+		User:      NewUserRepo(db, log),
+		Role:      NewRoleRepo(db, log),
+		Category:  NewCategoryRepo(db, log),
+		Product:   NewProductRepo(db, log),
+		Attribute: NewAttributeRepo(db, log),
+		Option:    NewOptionRepo(db, log),
 	}
 }
 
@@ -47,5 +51,21 @@ type Product interface {
 	GetList(pagination *models.Pagination) ([]models.Product, error)
 	GetById(id int64) (models.Product, error)
 	Update(product models.ProductUpdateRequest) error
+	DeleteById(id int64) error
+}
+
+type Attribute interface {
+	Create(attribute models.AttributeCreateRequest) (int64, error)
+	GetList(pagination *models.Pagination) ([]models.Attribute, error)
+	GetById(id int64) (models.Attribute, error)
+	Update(attribute models.AttributeUpdateRequest) error
+	DeleteById(id int64) error
+}
+
+type Option interface {
+	Create(option models.OptionCreateRequest) (int64, error)
+	GetList(pagination *models.Pagination, filters map[string]interface{}) ([]models.Option, error)
+	GetById(id int64) (models.Option, error)
+	Update(option models.OptionUpdateRequest) error
 	DeleteById(id int64) error
 }

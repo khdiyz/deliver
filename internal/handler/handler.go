@@ -74,6 +74,25 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			product.PUT("/:id", h.updateProduct)
 			product.DELETE("/:id", h.deleteProduct)
 		}
+
+		attribute := api.Group("/attributes")
+		{
+			attribute.POST("", h.createAttribute)
+			attribute.GET("", h.getListAttribute)
+			attribute.GET("/:id", h.getAttributeById)
+			attribute.PUT("/:id", h.updateAttribute)
+			attribute.DELETE("/:id", h.deleteAttribute)
+		}
+
+		option := attribute.Group("/:id/options")
+		{
+			option.POST("", h.createOption)
+			option.GET("", h.getListOption)
+			option.GET("/:option-id", h.getOptionById)
+			option.PUT("/:option-id", h.updateOption)
+			option.DELETE("/:option-id", h.deleteOption)
+		}
+
 	}
 
 	return router

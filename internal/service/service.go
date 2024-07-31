@@ -16,6 +16,8 @@ type Service struct {
 	Role
 	Category
 	Product
+	Attribute
+	Option
 }
 
 func NewService(repo repository.Repository, storage storage.Storage, log logger.Logger) *Service {
@@ -26,6 +28,8 @@ func NewService(repo repository.Repository, storage storage.Storage, log logger.
 		Role:          NewRoleService(repo, log),
 		Category:      NewCategoryService(repo, log),
 		Product:       NewProductService(repo, log),
+		Attribute:     NewAttributeService(repo, log),
+		Option:        NewOptionService(repo, log),
 	}
 }
 
@@ -66,4 +70,20 @@ type Product interface {
 	GetById(id int64) (models.Product, error)
 	Update(product models.ProductUpdateRequest) error
 	DeleteById(id int64) error
+}
+
+type Attribute interface {
+	Create(attribute models.AttributeCreateRequest) (int64, error)
+	GetList(pagination *models.Pagination) ([]models.Attribute, error)
+	GetById(id int64) (models.Attribute, error)
+	Update(attribute models.AttributeUpdateRequest) error
+	DeleteById(id int64) error
+}
+
+type Option interface {
+	Create(option models.OptionCreateRequest) (int64, error)
+	GetList(pagination *models.Pagination, filters map[string]interface{}) ([]models.Option, error)
+	Get(attributeId, optionId int64) (models.Option, error)
+	Update(option models.OptionUpdateRequest) error
+	Delete(attributeId, optionId int64) error
 }
