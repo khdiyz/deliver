@@ -13,6 +13,7 @@ type Service struct {
 	Authorization
 	User
 	Minio
+	Role
 }
 
 func NewService(repo repository.Repository, storage storage.Storage, log logger.Logger) *Service {
@@ -20,6 +21,7 @@ func NewService(repo repository.Repository, storage storage.Storage, log logger.
 		Authorization: NewAuthService(repo, log),
 		User:          NewUserService(repo, log),
 		Minio:         NewMinioService(storage, log),
+		Role:          NewRoleService(repo, log),
 	}
 }
 
@@ -40,4 +42,8 @@ type Minio interface {
 	UploadImage(image io.Reader, imageSize int64, contextType string) (storage.File, error)
 	UploadDoc(doc io.Reader, docSize int64, contextType string) (storage.File, error)
 	UploadExcel(doc io.Reader, docSize int64, contextType string) (storage.File, error)
+}
+
+type Role interface {
+	GetList(pagination *models.Pagination) ([]models.Role, error)
 }

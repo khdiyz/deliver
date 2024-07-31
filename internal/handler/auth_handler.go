@@ -20,7 +20,7 @@ import (
 // @Failure 400 {object} models.BaseResponse
 // @Failure 404 {object} models.BaseResponse
 // @Failure 500 {object} models.BaseResponse
-// @Router /auth/login [post]
+// @Router /api/v1/auth/login [post]
 func (h *Handler) login(c *gin.Context) {
 	var input models.LoginRequest
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -56,7 +56,7 @@ func (h *Handler) login(c *gin.Context) {
 // @Failure 400 {object} models.BaseResponse
 // @Failure 404 {object} models.BaseResponse
 // @Failure 500 {object} models.BaseResponse
-// @Router /auth/refresh [post]
+// @Router /api/v1/auth/refresh [post]
 func (h *Handler) refresh(c *gin.Context) {
 	var (
 		err   error
@@ -75,7 +75,7 @@ func (h *Handler) refresh(c *gin.Context) {
 
 	claims, err := h.services.Authorization.ParseToken(input.Token)
 	if err != nil {
-		response.AbortResponse(c, err.Error())
+		response.ErrorResponse(c, response.Unauthorized, err)
 		return
 	}
 

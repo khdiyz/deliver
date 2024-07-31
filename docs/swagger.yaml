@@ -66,6 +66,74 @@ info:
   title: EduSync API
   version: "1.0"
 paths:
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login User
+      parameters:
+      - description: Login
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      summary: Login User
+      tags:
+      - Auth
+  /api/v1/auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refresh Token
+      parameters:
+      - description: Refresh Token
+        in: body
+        name: token
+        required: true
+        schema:
+          $ref: '#/definitions/models.RefreshRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      summary: Refresh Token
+      tags:
+      - Auth
   /api/v1/minio/upload-image:
     post:
       consumes:
@@ -104,6 +172,48 @@ paths:
       - ApiKeyAuth: []
       tags:
       - Minio
+  /api/v1/roles:
+    get:
+      consumes:
+      - application/json
+      description: Get List Role
+      parameters:
+      - default: 10
+        description: pageSize
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - default: 1
+        description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List Role
+      tags:
+      - Role
   /api/v1/users:
     post:
       consumes:
@@ -140,74 +250,6 @@ paths:
       summary: Create User
       tags:
       - User
-  /auth/login:
-    post:
-      consumes:
-      - application/json
-      description: Login User
-      parameters:
-      - description: Login
-        in: body
-        name: login
-        required: true
-        schema:
-          $ref: '#/definitions/models.LoginRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.BaseResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/models.BaseResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/models.BaseResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/models.BaseResponse'
-      summary: Login User
-      tags:
-      - Auth
-  /auth/refresh:
-    post:
-      consumes:
-      - application/json
-      description: Refresh Token
-      parameters:
-      - description: Refresh Token
-        in: body
-        name: token
-        required: true
-        schema:
-          $ref: '#/definitions/models.RefreshRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.BaseResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/models.BaseResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/models.BaseResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/models.BaseResponse'
-      summary: Refresh Token
-      tags:
-      - Auth
 securityDefinitions:
   ApiKeyAuth:
     in: header
