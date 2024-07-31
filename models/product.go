@@ -25,3 +25,14 @@ type ProductUpdateRequest struct {
 	Photo       string `json:"photo" validate:"required"`
 	Price       int    `json:"price"`
 }
+
+type AddAttributeToProduct struct {
+	ProductId   int64 `json:"product_id"`
+	AttributeId int64 `json:"attribute_id"`
+}
+
+type ProductAttribute struct {
+	Id          int64 `json:"id"`
+	ProductId   int64 `json:"product_id"`
+	AttributeId int64 `json:"attribute_id"`
+}

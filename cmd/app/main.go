@@ -15,7 +15,7 @@ import (
 	"syscall"
 )
 
-// @title EduSync API
+// @title Deliver API
 // @version 1.0
 // @description API Server for Application
 

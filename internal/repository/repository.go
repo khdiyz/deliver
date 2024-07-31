@@ -14,16 +14,18 @@ type Repository struct {
 	Product
 	Attribute
 	Option
+	ProductAttribute
 }
 
 func NewRepository(db *sqlx.DB, log logger.Logger) *Repository {
 	return &Repository{
-		User:      NewUserRepo(db, log),
-		Role:      NewRoleRepo(db, log),
-		Category:  NewCategoryRepo(db, log),
-		Product:   NewProductRepo(db, log),
-		Attribute: NewAttributeRepo(db, log),
-		Option:    NewOptionRepo(db, log),
+		User:             NewUserRepo(db, log),
+		Role:             NewRoleRepo(db, log),
+		Category:         NewCategoryRepo(db, log),
+		Product:          NewProductRepo(db, log),
+		Attribute:        NewAttributeRepo(db, log),
+		Option:           NewOptionRepo(db, log),
+		ProductAttribute: NewProductAttributeRepo(db, log),
 	}
 }
 
@@ -68,4 +70,10 @@ type Option interface {
 	GetById(id int64) (models.Option, error)
 	Update(option models.OptionUpdateRequest) error
 	DeleteById(id int64) error
+}
+
+type ProductAttribute interface {
+	Create(request models.AddAttributeToProduct) (int64, error)
+	GetByProductIdAndAttributeId(productId, attributeId int64) (models.ProductAttribute, error)
+	DeleteByProductIdAndAttributeId(productId, attributeId int64) error
 }

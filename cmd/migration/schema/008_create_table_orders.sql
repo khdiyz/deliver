@@ -13,3 +13,5 @@ CREATE TABLE "orders" (
 
 -- +goose Down
 DROP TABLE "orders";
+
+DROP TYPE "order_status";

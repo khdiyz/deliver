@@ -1,9 +1,12 @@
 package service
 
 import (
+	"database/sql"
+	"deliver/internal/constants"
 	"deliver/internal/repository"
 	"deliver/models"
 	"deliver/pkg/logger"
+	"errors"
 
 	"google.golang.org/grpc/codes"
 )
@@ -58,6 +61,50 @@ func (s *ProductService) Update(product models.ProductUpdateRequest) error {
 
 func (s *ProductService) DeleteById(id int64) error {
 	err := s.repo.Product.DeleteById(id)
+	if err != nil {
+		return serviceError(err, codes.Internal)
+	}
+
+	return nil
+}
+
+func (s *ProductService) AddAttributeToProduct(productId, attributeId int64) error {
+	_, err := s.repo.Product.GetById(productId)
+	if err != nil {
+		return serviceError(err, codes.NotFound)
+	}
+
+	_, err = s.repo.Attribute.GetById(attributeId)
+	if err != nil {
+		return serviceError(err, codes.NotFound)
+	}
+
+	_, err = s.repo.ProductAttribute.GetByProductIdAndAttributeId(productId, attributeId)
+	if err == nil {
+		return serviceError(errors.New("already exists"), codes.InvalidArgument)
+	} else if err != sql.ErrNoRows {
+		return serviceError(err, codes.Internal)
+	}
+
+	_, err = s.repo.ProductAttribute.Create(models.AddAttributeToProduct{
+		ProductId:   productId,
+		AttributeId: attributeId,
+	})
+
+	if err != nil {
+		return serviceError(err, codes.Internal)
+	}
+
+	return nil
+}
+
+func (s *ProductService) RemoveAttributeFromProduct(productId, attributeId int64) error {
+	_, err := s.repo.ProductAttribute.GetByProductIdAndAttributeId(productId, attributeId)
+	if err != nil {
+		return serviceError(constants.ErrorDataIsEmpty, codes.InvalidArgument)
+	}
+
+	err = s.repo.ProductAttribute.DeleteByProductIdAndAttributeId(productId, attributeId)
 	if err != nil {
 		return serviceError(err, codes.Internal)
 	}

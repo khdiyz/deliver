@@ -70,6 +70,8 @@ type Product interface {
 	GetById(id int64) (models.Product, error)
 	Update(product models.ProductUpdateRequest) error
 	DeleteById(id int64) error
+	AddAttributeToProduct(productId, attributeId int64) error
+	RemoveAttributeFromProduct(productId, attributeId int64) error
 }
 
 type Attribute interface {

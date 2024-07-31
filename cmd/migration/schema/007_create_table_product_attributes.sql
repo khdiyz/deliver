@@ -4,7 +4,8 @@ CREATE TABLE "product_attributes" (
     "product_id" BIGINT NOT NULL,
     "attribute_id" BIGINT NOT NULL,
     FOREIGN KEY ("product_id") REFERENCES "products"("id"),
-    FOREIGN KEY ("attribute_id") REFERENCES "attributes"("id")
+    FOREIGN KEY ("attribute_id") REFERENCES "attributes"("id"),
+    CONSTRAINT unique_product_attribute UNIQUE ("product_id", "attribute_id")
 );
 
 -- +goose Down

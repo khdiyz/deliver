@@ -8,6 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	attributeIdParam = "attribute-id"
+)
+
 // Create Product
 // @Description Create Product
 // @Summary Create Product
@@ -169,6 +173,78 @@ func (h *Handler) deleteProduct(c *gin.Context) {
 	}
 
 	err = h.services.Product.DeleteById(id)
+	if err != nil {
+		response.FromError(c, err)
+		return
+	}
+
+	response.SuccessResponse(c, response.OK, nil, nil)
+}
+
+// Add Attribute to Product
+// @Description Add Attribute to Product
+// @Summary Add Attribute to Product
+// @Tags Product
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Product Id"
+// @Param attribute-id path int64 true "Attribute Id"
+// @Success 200 {object} models.BaseResponse
+// @Failure 400 {object} models.BaseResponse
+// @Failure 404 {object} models.BaseResponse
+// @Failure 500 {object} models.BaseResponse
+// @Router /api/v1/products/{id}/add/{attribute-id} [post]
+// @Security ApiKeyAuth
+func (h *Handler) addAttributeToProduct(c *gin.Context) {
+	productId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		response.ErrorResponse(c, response.BadRequest, err)
+		return
+	}
+
+	attributeId, err := getNullInt64Param(c, attributeIdParam)
+	if err != nil {
+		response.ErrorResponse(c, response.BadRequest, err)
+		return
+	}
+
+	err = h.services.Product.AddAttributeToProduct(productId, attributeId)
+	if err != nil {
+		response.FromError(c, err)
+		return
+	}
+
+	response.SuccessResponse(c, response.OK, nil, nil)
+}
+
+// Remove Attribute from Product
+// @Description Remove Attribute from Product
+// @Summary Remove Attribute from Product
+// @Tags Product
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Product Id"
+// @Param attribute-id path int64 true "Attribute Id"
+// @Success 200 {object} models.BaseResponse
+// @Failure 400 {object} models.BaseResponse
+// @Failure 404 {object} models.BaseResponse
+// @Failure 500 {object} models.BaseResponse
+// @Router /api/v1/products/{id}/remove/{attribute-id} [delete]
+// @Security ApiKeyAuth
+func (h *Handler) removeAttributeFromProduct(c *gin.Context) {
+	productId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		response.ErrorResponse(c, response.BadRequest, err)
+		return
+	}
+
+	attributeId, err := getNullInt64Param(c, attributeIdParam)
+	if err != nil {
+		response.ErrorResponse(c, response.BadRequest, err)
+		return
+	}
+
+	err = h.services.Product.RemoveAttributeFromProduct(productId, attributeId)
 	if err != nil {
 		response.FromError(c, err)
 		return

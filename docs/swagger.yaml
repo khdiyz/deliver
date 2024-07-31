@@ -137,7 +137,7 @@ host: localhost:8080
 info:
   contact: {}
   description: API Server for Application
-  title: EduSync API
+  title: Deliver API
   version: "1.0"
 paths:
   /api/v1/attributes:
@@ -1013,6 +1013,86 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Update Product
+      tags:
+      - Product
+  /api/v1/products/{id}/add/{attribute-id}:
+    post:
+      consumes:
+      - application/json
+      description: Add Attribute to Product
+      parameters:
+      - description: Product Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Attribute Id
+        in: path
+        name: attribute-id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Add Attribute to Product
+      tags:
+      - Product
+  /api/v1/products/{id}/remove/{attribute-id}:
+    delete:
+      consumes:
+      - application/json
+      description: Remove Attribute from Product
+      parameters:
+      - description: Product Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Attribute Id
+        in: path
+        name: attribute-id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Remove Attribute from Product
       tags:
       - Product
   /api/v1/roles:

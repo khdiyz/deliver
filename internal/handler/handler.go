@@ -73,6 +73,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			product.GET("/:id", h.getProductById)
 			product.PUT("/:id", h.updateProduct)
 			product.DELETE("/:id", h.deleteProduct)
+			product.POST("/:id/add/:attribute-id", h.addAttributeToProduct)
+			product.DELETE("/:id/remove/:attribute-id", h.removeAttributeFromProduct)
 		}
 
 		attribute := api.Group("/attributes")
