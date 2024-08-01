@@ -6,7 +6,7 @@ CREATE TABLE "order_products" (
     "product_id" BIGINT NOT NULL,
     "product_attributes" JSON NOT NULL,
     "quantity" INTEGER NOT NULL DEFAULT 1,
-    FOREIGN KEY ("order_id") REFERENCES "orders"("id"),
+    FOREIGN KEY ("order_id") REFERENCES "orders"("id") ON DELETE CASCADE,
     FOREIGN KEY ("product_id") REFERENCES "products"("id")
 );
 

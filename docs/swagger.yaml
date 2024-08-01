@@ -1,14 +1,5 @@
 basePath: /
 definitions:
-  models.AddToCart:
-    properties:
-      attributes:
-        items:
-          $ref: '#/definitions/models.AttributeAndOption'
-        type: array
-      quantity:
-        type: integer
-    type: object
   models.AttributeAndOption:
     properties:
       attribute_id:
@@ -82,6 +73,30 @@ definitions:
         type: string
     required:
     - name
+    type: object
+  models.OrderCreateRequest:
+    properties:
+      address:
+        type: string
+      location_x:
+        type: number
+      location_y:
+        type: number
+      products:
+        items:
+          $ref: '#/definitions/models.OrderProductCreateRequest'
+        type: array
+    type: object
+  models.OrderProductCreateRequest:
+    properties:
+      attributes:
+        items:
+          $ref: '#/definitions/models.AttributeAndOption'
+        type: array
+      product_id:
+        type: integer
+      quantity:
+        type: integer
     type: object
   models.Pagination:
     properties:
@@ -894,6 +909,42 @@ paths:
       - ApiKeyAuth: []
       tags:
       - Minio
+  /api/v1/orders:
+    post:
+      consumes:
+      - application/json
+      description: Create Order
+      parameters:
+      - description: Create Order
+        in: body
+        name: create
+        required: true
+        schema:
+          $ref: '#/definitions/models.OrderCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Order
+      tags:
+      - Order
   /api/v1/products:
     get:
       consumes:
@@ -1158,46 +1209,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Remove Attribute from Product
-      tags:
-      - Product
-  /api/v1/products/{id}/to-cart:
-    post:
-      consumes:
-      - application/json
-      description: Add Product to Cart
-      parameters:
-      - description: Product Id
-        in: path
-        name: id
-        required: true
-        type: integer
-      - description: Product Options
-        in: body
-        name: option
-        schema:
-          $ref: '#/definitions/models.AddToCart'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.BaseResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/models.BaseResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/models.BaseResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/models.BaseResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Add Product to Cart
       tags:
       - Product
   /api/v1/roles:

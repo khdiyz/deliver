@@ -150,13 +150,6 @@ func (s *AuthService) SignUp(input models.SignUpRequest) (*models.Token, *models
 		return nil, nil, serviceError(err, codes.Internal)
 	}
 
-	if input.RoleName == constants.RoleCustomer {
-		_, err = s.repo.Cart.Create(userId)
-		if err != nil {
-			return nil, nil, serviceError(err, codes.Internal)
-		}
-	}
-
 	return s.GenerateTokens(models.User{
 		Id:       userId,
 		FullName: input.FullName,

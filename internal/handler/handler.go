@@ -77,7 +77,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			product.DELETE("/:id", h.deleteProduct)
 			product.POST("/:id/add/:attribute-id", h.addAttributeToProduct)
 			product.DELETE("/:id/remove/:attribute-id", h.removeAttributeFromProduct)
-			product.POST("/:id/to-cart", h.addProductToCart)
 
 		}
 
@@ -99,6 +98,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			option.DELETE("/:option-id", h.deleteOption)
 		}
 
+		order := api.Group("/orders")
+		{
+			order.POST("", h.createOrder)
+		}
 	}
 
 	return router

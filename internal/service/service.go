@@ -19,6 +19,7 @@ type Service struct {
 	Product
 	Attribute
 	Option
+	Order
 }
 
 func NewService(repo repository.Repository, storage storage.Storage, log logger.Logger, cfg config.Config) *Service {
@@ -31,6 +32,7 @@ func NewService(repo repository.Repository, storage storage.Storage, log logger.
 		Product:       NewProductService(repo, log, cfg),
 		Attribute:     NewAttributeService(repo, log),
 		Option:        NewOptionService(repo, log),
+		Order:         NewOrderService(repo, log),
 	}
 }
 
@@ -74,7 +76,6 @@ type Product interface {
 	DeleteById(id int64) error
 	AddAttributeToProduct(productId, attributeId int64) error
 	RemoveAttributeFromProduct(productId, attributeId int64) error
-	AddToCart(userId int64, request models.CartProductCreateRequest) error
 }
 
 type Attribute interface {
@@ -91,4 +92,8 @@ type Option interface {
 	Get(attributeId, optionId int64) (models.Option, error)
 	Update(option models.OptionUpdateRequest) error
 	Delete(attributeId, optionId int64) error
+}
+
+type Order interface {
+	CreateOrder(input models.OrderCreateRequest) (int64, error)
 }

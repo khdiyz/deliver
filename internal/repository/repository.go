@@ -15,7 +15,7 @@ type Repository struct {
 	Attribute
 	Option
 	ProductAttribute
-	Cart
+	Order
 }
 
 func NewRepository(db *sqlx.DB, log logger.Logger) *Repository {
@@ -27,7 +27,7 @@ func NewRepository(db *sqlx.DB, log logger.Logger) *Repository {
 		Attribute:        NewAttributeRepo(db, log),
 		Option:           NewOptionRepo(db, log),
 		ProductAttribute: NewProductAttributeRepo(db, log),
-		Cart:             NewCartRepo(db, log),
+		Order:            NewOrderRepo(db, log),
 	}
 }
 
@@ -81,8 +81,6 @@ type ProductAttribute interface {
 	DeleteByProductIdAndAttributeId(productId, attributeId int64) error
 }
 
-type Cart interface {
-	Create(userId int64) (int64, error)
-	GetCartIdByUserId(userId int64) (int64, error)
-	CreateCartProduct(cartProduct models.CartProductCreateRequest) (int64, error)
+type Order interface {
+	Create(order models.OrderCreateRequest) (int64, error)
 }

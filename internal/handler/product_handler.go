@@ -4,7 +4,6 @@ import (
 	"deliver/internal/handler/response"
 	"deliver/internal/models"
 	"deliver/pkg/validator"
-	"errors"
 
 	"github.com/gin-gonic/gin"
 )
@@ -247,56 +246,6 @@ func (h *Handler) removeAttributeFromProduct(c *gin.Context) {
 
 	err = h.services.Product.RemoveAttributeFromProduct(productId, attributeId)
 	if err != nil {
-		response.FromError(c, err)
-		return
-	}
-
-	response.SuccessResponse(c, response.OK, nil, nil)
-}
-
-// Add Product to Cart
-// @Description Add Product to Cart
-// @Summary Add Product to Cart
-// @Tags Product
-// @Accept json
-// @Produce json
-// @Param id path int64 true "Product Id"
-// @Param option body models.AddToCart false "Product Options"
-// @Success 200 {object} models.BaseResponse
-// @Failure 400 {object} models.BaseResponse
-// @Failure 404 {object} models.BaseResponse
-// @Failure 500 {object} models.BaseResponse
-// @Router /api/v1/products/{id}/to-cart [post]
-// @Security ApiKeyAuth
-func (h *Handler) addProductToCart(c *gin.Context) {
-	productId, err := getNullInt64Param(c, idQuery)
-	if err != nil {
-		response.ErrorResponse(c, response.BadRequest, err)
-		return
-	}
-
-	var input models.AddToCart
-	if err := c.ShouldBindJSON(&input); err != nil {
-		response.ErrorResponse(c, response.BadRequest, err)
-		return
-	}
-
-	if input.Quantity < 1 {
-		response.ErrorResponse(c, response.BadRequest, errors.New("minimum quantity must be 1"))
-		return
-	}
-
-	userId, err := getUserId(c)
-	if err != nil {
-		response.ErrorResponse(c, response.NotFound, err)
-		return
-	}
-
-	if err = h.services.Product.AddToCart(userId, models.CartProductCreateRequest{
-		ProductId:  productId,
-		Quantity:   input.Quantity,
-		Attributes: input.Attributes,
-	}); err != nil {
 		response.FromError(c, err)
 		return
 	}
