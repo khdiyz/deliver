@@ -37,3 +37,13 @@ type ProductAttribute struct {
 	ProductId   int64 `json:"product_id"`
 	AttributeId int64 `json:"attribute_id"`
 }
+
+type AttributeAndOption struct {
+	AttributeId int64 `json:"attribute_id"`
+	OptionId    int64 `json:"option_id"`
+}
+
+type AddToCart struct {
+	Quantity   int                  `json:"quantity"`
+	Attributes []AttributeAndOption `json:"attributes"`
+}

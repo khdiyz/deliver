@@ -187,7 +187,7 @@ func (r *ProductRepo) Update(product models.ProductUpdateRequest) error {
 		return err
 	}
 	if rowAffected == 0 {
-		return constants.ErrorNoRowsAffected
+		return constants.ErrNoRowsAffected
 	}
 
 	return nil
@@ -208,7 +208,7 @@ func (r *ProductRepo) DeleteById(id int64) error {
 		return err
 	}
 	if rowAffected == 0 {
-		return constants.ErrorNoRowsAffected
+		return constants.ErrNoRowsAffected
 	}
 
 	return nil

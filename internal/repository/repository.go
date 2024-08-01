@@ -15,6 +15,7 @@ type Repository struct {
 	Attribute
 	Option
 	ProductAttribute
+	Cart
 }
 
 func NewRepository(db *sqlx.DB, log logger.Logger) *Repository {
@@ -26,6 +27,7 @@ func NewRepository(db *sqlx.DB, log logger.Logger) *Repository {
 		Attribute:        NewAttributeRepo(db, log),
 		Option:           NewOptionRepo(db, log),
 		ProductAttribute: NewProductAttributeRepo(db, log),
+		Cart:             NewCartRepo(db, log),
 	}
 }
 
@@ -38,6 +40,7 @@ type User interface {
 type Role interface {
 	GetList(pagination *models.Pagination) ([]models.Role, error)
 	GetById(id int64) (models.Role, error)
+	GetByName(name string) (models.Role, error)
 }
 
 type Category interface {
@@ -76,4 +79,10 @@ type ProductAttribute interface {
 	Create(request models.AddAttributeToProduct) (int64, error)
 	GetByProductIdAndAttributeId(productId, attributeId int64) (models.ProductAttribute, error)
 	DeleteByProductIdAndAttributeId(productId, attributeId int64) error
+}
+
+type Cart interface {
+	Create(userId int64) (int64, error)
+	GetCartIdByUserId(userId int64) (int64, error)
+	CreateCartProduct(cartProduct models.CartProductCreateRequest) (int64, error)
 }

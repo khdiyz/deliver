@@ -39,6 +39,7 @@ type Authorization interface {
 	GenerateTokens(user models.User) (*models.Token, *models.Token, error)
 	ParseToken(token string) (*jwtCustomClaim, error)
 	Login(input models.LoginRequest) (*models.Token, *models.Token, error)
+	SignUp(input models.SignUpRequest) (*models.Token, *models.Token, error)
 }
 
 type User interface {
@@ -73,6 +74,7 @@ type Product interface {
 	DeleteById(id int64) error
 	AddAttributeToProduct(productId, attributeId int64) error
 	RemoveAttributeFromProduct(productId, attributeId int64) error
+	AddToCart(userId int64, request models.CartProductCreateRequest) error
 }
 
 type Attribute interface {

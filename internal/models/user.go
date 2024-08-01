@@ -15,6 +15,13 @@ type LoginRequest struct {
 	Password string `json:"password" validate:"required" default:"Secret@12"`
 }
 
+type SignUpRequest struct {
+	FullName string `json:"full_name" validate:"required"`
+	Email    string `json:"email" validate:"email"`
+	Password string `json:"password" validate:"required"`
+	RoleName string `json:"role_name" validate:"required"`
+}
+
 type RefreshRequest struct {
 	Token string `json:"token" validate:"required"`
 }

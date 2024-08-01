@@ -1,8 +1,10 @@
 package repository
 
 import (
+	"database/sql"
 	"deliver/internal/models"
 	"deliver/pkg/logger"
+	"errors"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -68,6 +70,9 @@ func (r *UserRepo) GetByEmail(email string) (models.User, error) {
 		&user.RoleName,
 	)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return models.User{}, err
+		}
 		r.log.Error(err)
 		return models.User{}, err
 	}

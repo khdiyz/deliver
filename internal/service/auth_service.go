@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"deliver/config"
 	"deliver/internal/constants"
-	"deliver/internal/repository"
 	"deliver/internal/models"
+	"deliver/internal/repository"
 	"deliver/pkg/helper"
 	"deliver/pkg/logger"
 	"errors"
@@ -116,4 +116,53 @@ func (s *AuthService) Login(input models.LoginRequest) (*models.Token, *models.T
 	}
 
 	return s.GenerateTokens(user)
+}
+
+func (s *AuthService) SignUp(input models.SignUpRequest) (*models.Token, *models.Token, error) {
+	_, err := s.repo.User.GetByEmail(input.Email)
+	if err == nil {
+		return nil, nil, serviceError(errors.New("user already exists with this email"), codes.InvalidArgument)
+	} else if err != sql.ErrNoRows {
+		return nil, nil, serviceError(err, codes.Internal)
+	}
+
+	input.Password, err = helper.GenerateHash(input.Password)
+	if err != nil {
+		return nil, nil, serviceError(err, codes.Internal)
+	}
+
+	if input.RoleName != constants.RoleCourier && input.RoleName != constants.RoleCustomer {
+		return nil, nil, serviceError(errors.New("role name must be only: COURIER, CUSTOMER"), codes.InvalidArgument)
+	}
+
+	role, err := s.repo.Role.GetByName(input.RoleName)
+	if err != nil {
+		return nil, nil, serviceError(err, codes.Internal)
+	}
+
+	userId, err := s.repo.User.Create(models.UserCreateRequest{
+		FullName: input.FullName,
+		Email:    input.Email,
+		Password: input.Password,
+		RoleId:   role.Id,
+	})
+	if err != nil {
+		return nil, nil, serviceError(err, codes.Internal)
+	}
+
+	if input.RoleName == constants.RoleCustomer {
+		_, err = s.repo.Cart.Create(userId)
+		if err != nil {
+			return nil, nil, serviceError(err, codes.Internal)
+		}
+	}
+
+	return s.GenerateTokens(models.User{
+		Id:       userId,
+		FullName: input.FullName,
+		Email:    input.Email,
+		Password: input.Password,
+		RoleId:   role.Id,
+		RoleName: role.Name,
+	})
 }

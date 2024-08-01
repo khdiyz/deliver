@@ -9,6 +9,42 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Sign Up
+// @Description Sign Up User
+// @Summary Sign Up User
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param signup body models.SignUpRequest true "Sign Up"
+// @Success 200 {object} models.BaseResponse
+// @Failure 400 {object} models.BaseResponse
+// @Failure 404 {object} models.BaseResponse
+// @Failure 500 {object} models.BaseResponse
+// @Router /api/v1/auth/signup [post]
+func (h *Handler) signUp(c *gin.Context) {
+	var input models.SignUpRequest
+	if err := c.ShouldBindJSON(&input); err != nil {
+		response.ErrorResponse(c, response.BadRequest, err)
+		return
+	}
+
+	if err := validator.ValidatePayloads(input); err != nil {
+		response.ErrorResponse(c, response.BadRequest, err)
+		return
+	}
+
+	accessToken, refreshToken, err := h.services.Authorization.SignUp(input)
+	if err != nil {
+		response.FromError(c, err)
+		return
+	}
+
+	response.SuccessResponse(c, response.OK, gin.H{
+		"accessToken":  accessToken.Token,
+		"refreshToken": refreshToken.Token,
+	}, nil)
+}
+
 // Login
 // @Description Login User
 // @Summary Login User

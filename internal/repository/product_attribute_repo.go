@@ -82,7 +82,7 @@ func (r *ProductAttributeRepo) DeleteByProductIdAndAttributeId(productId, attrib
 		return err
 	}
 	if rowAffected == 0 {
-		return constants.ErrorNoRowsAffected
+		return constants.ErrNoRowsAffected
 	}
 
 	return nil

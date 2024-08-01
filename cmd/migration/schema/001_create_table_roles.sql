@@ -9,7 +9,7 @@ CREATE UNIQUE INDEX unique_role_name ON "roles" ("name");
 
 INSERT INTO "roles" ("name") VALUES 
 ('ADMIN'),
-('USER'),
+('CUSTOMER'),
 ('COURIER');
 
 -- +goose Down

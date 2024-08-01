@@ -51,7 +51,7 @@ func (s *OptionService) Get(attributeId, optionId int64) (models.Option, error) 
 	}
 
 	if attributeId != option.AttributeId {
-		return models.Option{}, serviceError(constants.ErrorDataIsEmpty, codes.NotFound)
+		return models.Option{}, serviceError(constants.ErrDataIsEmpty, codes.NotFound)
 	}
 
 	return option, nil
@@ -60,7 +60,7 @@ func (s *OptionService) Get(attributeId, optionId int64) (models.Option, error) 
 func (s *OptionService) Update(option models.OptionUpdateRequest) error {
 	_, err := s.Get(option.AttributeId, option.Id)
 	if err != nil {
-		return serviceError(constants.ErrorDataIsEmpty, codes.NotFound)
+		return serviceError(constants.ErrDataIsEmpty, codes.NotFound)
 	}
 
 	err = s.repo.Option.Update(option)
@@ -74,7 +74,7 @@ func (s *OptionService) Update(option models.OptionUpdateRequest) error {
 func (s *OptionService) Delete(attributeId, optionId int64) error {
 	_, err := s.Get(attributeId, optionId)
 	if err != nil {
-		return serviceError(constants.ErrorDataIsEmpty, codes.NotFound)
+		return serviceError(constants.ErrDataIsEmpty, codes.NotFound)
 	}
 
 	err = s.repo.Option.DeleteById(optionId)

@@ -42,7 +42,7 @@ func ValidatePayloads(payload interface{}) (err error) {
 			value = e.Value().(string)
 			param = e.Param()
 
-			if helper.IsArrayContains(needParam, tag) {
+			if helper.IsArrayContainsString(needParam, tag) {
 				message = errWithParam(field, value, tag, param)
 				continue
 			}

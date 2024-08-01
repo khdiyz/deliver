@@ -139,7 +139,7 @@ func (r *CategoryRepo) Update(category models.CategoryUpdateRequest) error {
 		return err
 	}
 	if rowAffected == 0 {
-		return constants.ErrorNoRowsAffected
+		return constants.ErrNoRowsAffected
 	}
 
 	return nil
@@ -160,7 +160,7 @@ func (r *CategoryRepo) DeleteById(id int64) error {
 		return err
 	}
 	if rowAffected == 0 {
-		return constants.ErrorNoRowsAffected
+		return constants.ErrNoRowsAffected
 	}
 
 	return nil

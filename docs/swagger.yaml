@@ -1,5 +1,21 @@
 basePath: /
 definitions:
+  models.AddToCart:
+    properties:
+      attributes:
+        items:
+          $ref: '#/definitions/models.AttributeAndOption'
+        type: array
+      quantity:
+        type: integer
+    type: object
+  models.AttributeAndOption:
+    properties:
+      attribute_id:
+        type: integer
+      option_id:
+        type: integer
+    type: object
   models.AttributeCreateRequest:
     properties:
       name:
@@ -118,6 +134,21 @@ definitions:
         type: string
     required:
     - token
+    type: object
+  models.SignUpRequest:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      password:
+        type: string
+      role_name:
+        type: string
+    required:
+    - full_name
+    - password
+    - role_name
     type: object
   models.UserCreateRequest:
     properties:
@@ -603,6 +634,40 @@ paths:
           schema:
             $ref: '#/definitions/models.BaseResponse'
       summary: Refresh Token
+      tags:
+      - Auth
+  /api/v1/auth/signup:
+    post:
+      consumes:
+      - application/json
+      description: Sign Up User
+      parameters:
+      - description: Sign Up
+        in: body
+        name: signup
+        required: true
+        schema:
+          $ref: '#/definitions/models.SignUpRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      summary: Sign Up User
       tags:
       - Auth
   /api/v1/categories:
@@ -1095,6 +1160,46 @@ paths:
       summary: Remove Attribute from Product
       tags:
       - Product
+  /api/v1/products/{id}/to-cart:
+    post:
+      consumes:
+      - application/json
+      description: Add Product to Cart
+      parameters:
+      - description: Product Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product Options
+        in: body
+        name: option
+        schema:
+          $ref: '#/definitions/models.AddToCart'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Add Product to Cart
+      tags:
+      - Product
   /api/v1/roles:
     get:
       consumes:
@@ -1171,6 +1276,35 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Create User
+      tags:
+      - User
+  /api/v1/users/me:
+    get:
+      consumes:
+      - application/json
+      description: User Me
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: User Me
       tags:
       - User
 securityDefinitions:

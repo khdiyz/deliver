@@ -116,3 +116,16 @@ func getNullStringQuery(c *gin.Context, queryName string) string {
 	queryData = strings.Trim(queryData, " ")
 	return queryData
 }
+
+func getUserId(ctx *gin.Context) (int64, error) {
+	id, ok := ctx.Get("user_id")
+	if !ok {
+		return 0, constants.ErrInvalidUserId
+	}
+	userId, ok := id.(int64)
+	if !ok {
+		return 0, constants.ErrInvalidUserId
+	}
+
+	return userId, nil
+}

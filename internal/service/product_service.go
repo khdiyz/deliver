@@ -111,13 +111,55 @@ func (s *ProductService) AddAttributeToProduct(productId, attributeId int64) err
 func (s *ProductService) RemoveAttributeFromProduct(productId, attributeId int64) error {
 	_, err := s.repo.ProductAttribute.GetByProductIdAndAttributeId(productId, attributeId)
 	if err != nil {
-		return serviceError(constants.ErrorDataIsEmpty, codes.InvalidArgument)
+		return serviceError(constants.ErrDataIsEmpty, codes.InvalidArgument)
 	}
 
 	err = s.repo.ProductAttribute.DeleteByProductIdAndAttributeId(productId, attributeId)
 	if err != nil {
 		return serviceError(err, codes.Internal)
 	}
+
+	return nil
+}
+
+func (s *ProductService) AddToCart(userId int64, request models.CartProductCreateRequest) error {
+	var err error
+
+	request.CartId, err = s.repo.Cart.GetCartIdByUserId(userId)
+	if err != nil {
+		return serviceError(err, codes.Internal)
+	}
+
+	_, err = s.repo.Product.GetById(request.ProductId)
+	if err != nil {
+		return serviceError(err, codes.InvalidArgument)
+	}
+
+	_, err = s.repo.Cart.CreateCartProduct(request)
+	if err != nil {
+		return serviceError(err, codes.Internal)
+	}
+
+	// for i := range options {
+	// 	attribute, err := s.repo.Attribute.GetById(options[i].AttributeId)
+	// 	if err != nil {
+	// 		return serviceError(err, codes.InvalidArgument)
+	// 	}
+
+	// 	attributeOptionIds := []int64{}
+	// 	for j := range attribute.Options {
+	// 		attributeOptionIds = append(attributeOptionIds, attribute.Options[j].Id)
+	// 	}
+
+	// 	if !helper.IsArrayContainsInt64(attributeOptionIds, options[i].OptionId) {
+	// 		return serviceError(errors.New("invalid option id"), codes.InvalidArgument)
+	// 	}
+	// }
+
+	// err = s.repo.Cart.CreateCartProduct()
+	// if err != nil {
+	// 	return serviceError(err, codes.Internal)
+	// }
 
 	return nil
 }

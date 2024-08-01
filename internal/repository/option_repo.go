@@ -140,7 +140,7 @@ func (r *OptionRepo) Update(option models.OptionUpdateRequest) error {
 		return err
 	}
 	if rowAffected == 0 {
-		return constants.ErrorNoRowsAffected
+		return constants.ErrNoRowsAffected
 	}
 
 	return nil
@@ -161,7 +161,7 @@ func (r *OptionRepo) DeleteById(id int64) error {
 		return err
 	}
 	if rowAffected == 0 {
-		return constants.ErrorNoRowsAffected
+		return constants.ErrNoRowsAffected
 	}
 
 	return nil

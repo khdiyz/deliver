@@ -81,3 +81,22 @@ func (r *RoleRepo) GetById(id int64) (models.Role, error) {
 
 	return role, nil
 }
+
+func (r *RoleRepo) GetByName(name string) (models.Role, error) {
+	var role models.Role
+
+	query := `
+	SELECT
+		id,
+		name,
+		COALESCE(description, '') AS description
+	FROM roles
+	WHERE
+		name = $1;`
+
+	if err := r.db.QueryRow(query, name).Scan(&role.Id, &role.Name, &role.Description); err != nil {
+		return models.Role{}, err
+	}
+
+	return role, nil
+}

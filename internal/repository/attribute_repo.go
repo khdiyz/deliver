@@ -4,6 +4,7 @@ import (
 	"deliver/internal/constants"
 	"deliver/internal/models"
 	"deliver/pkg/logger"
+	"encoding/json"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -80,13 +81,27 @@ func (r *AttributeRepo) GetById(id int64) (models.Attribute, error) {
 
 	query := `
 	SELECT
-		id,
-		name
-	FROM attributes 
-	WHERE
-		id = $1;`
+	    a.id,
+	    a.name,
+	    COALESCE(json_agg(
+	        json_build_object(
+	            'id', o.id,
+	            'name', o.name
+	        )
+	    ) FILTER (WHERE o.id IS NOT NULL), '[]') AS options
+	FROM attributes a
+	LEFT JOIN options o ON a.id = o.attribute_id
+	WHERE a.id = $1
+	GROUP BY a.id, a.name;`
 
-	err := r.db.QueryRow(query, id).Scan(&attribute.Id, &attribute.Name)
+	var optionsData []byte
+	err := r.db.QueryRow(query, id).Scan(&attribute.Id, &attribute.Name, &optionsData)
+	if err != nil {
+		r.log.Error(err)
+		return models.Attribute{}, err
+	}
+
+	err = json.Unmarshal(optionsData, &attribute.Options)
 	if err != nil {
 		r.log.Error(err)
 		return models.Attribute{}, err
@@ -115,7 +130,7 @@ func (r *AttributeRepo) Update(attribute models.AttributeUpdateRequest) error {
 		return err
 	}
 	if rowAffected == 0 {
-		return constants.ErrorNoRowsAffected
+		return constants.ErrNoRowsAffected
 	}
 
 	return nil
@@ -136,7 +151,7 @@ func (r *AttributeRepo) DeleteById(id int64) error {
 		return err
 	}
 	if rowAffected == 0 {
-		return constants.ErrorNoRowsAffected
+		return constants.ErrNoRowsAffected
 	}
 
 	return nil

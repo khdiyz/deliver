@@ -38,9 +38,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	// AUTH
 	router.POST("api/v1/auth/login", h.login)
+	router.POST("api/v1/auth/signup", h.signUp)
 	router.POST("api/v1/auth/refresh", h.refresh)
 
-	api := router.Group("/api/v1", h.userIdentity)
+	api := router.Group("/api/v1", h.userIdentity) // , h.userIdentity
 	{
 		minio := api.Group("/minio")
 		{
@@ -50,6 +51,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		user := api.Group("/users")
 		{
 			user.POST("", h.createUser)
+			user.GET("/me", h.getUserMe)
 		}
 
 		role := api.Group("/roles")
@@ -75,6 +77,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			product.DELETE("/:id", h.deleteProduct)
 			product.POST("/:id/add/:attribute-id", h.addAttributeToProduct)
 			product.DELETE("/:id/remove/:attribute-id", h.removeAttributeFromProduct)
+			product.POST("/:id/to-cart", h.addProductToCart)
+
 		}
 
 		attribute := api.Group("/attributes")
