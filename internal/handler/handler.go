@@ -2,6 +2,7 @@ package handler
 
 import (
 	"deliver/internal/service"
+	"deliver/internal/ws"
 
 	"deliver/docs"
 
@@ -40,6 +41,11 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	router.POST("api/v1/auth/login", h.login)
 	router.POST("api/v1/auth/signup", h.signUp)
 	router.POST("api/v1/auth/refresh", h.refresh)
+
+	// WebSocket route
+	router.GET("/ws", func(c *gin.Context) {
+		ws.HandleWebSocket(c.Writer, c.Request)
+	})
 
 	api := router.Group("/api/v1", h.userIdentity) // , h.userIdentity
 	{
@@ -103,6 +109,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			order.POST("", h.createOrder)
 		}
 	}
+
+	ws.StartWebSocketHub() // Start the WebSocket hub
 
 	return router
 }

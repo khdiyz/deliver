@@ -1,3 +1,4 @@
 .env
 vendor/*
 !vendor/modules.txt
+plan.txt
