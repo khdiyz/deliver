@@ -5,7 +5,7 @@ CREATE TABLE "users" (
     "email" VARCHAR(64) NOT NULL,
     "password" TEXT NOT NULL,
     "role_id" BIGINT NOT NULL,
-    FOREIGN KEY ("role_id") REFERENCES "roles"("id")
+    FOREIGN KEY ("role_id") REFERENCES "roles"("id") ON DELETE CASCADE
 );
 
 CREATE UNIQUE INDEX unique_email ON "users" ("email");

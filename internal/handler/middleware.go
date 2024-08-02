@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"deliver/internal/constants"
 	"deliver/internal/handler/response"
 	"strings"
 
@@ -8,13 +9,13 @@ import (
 )
 
 const (
-	authorizationHeader = "Authorization"
-	userCtx             = "user_id"
-	roleCtx             = "role_id"
+	AuthorizationHeader = "Authorization"
+	UserCtx             = "user_id"
+	RoleCtx             = "role_name"
 )
 
 func (h *Handler) userIdentity(c *gin.Context) {
-	header := c.GetHeader(authorizationHeader)
+	header := c.GetHeader(AuthorizationHeader)
 	if header == "" {
 		response.AbortResponse(c, "empty auth header")
 		return
@@ -42,9 +43,45 @@ func (h *Handler) userIdentity(c *gin.Context) {
 		return
 	}
 
-	c.Set(userCtx, claims.UserId)
-	c.Set(roleCtx, claims.RoleName)
+	c.Set(UserCtx, claims.UserId)
+	c.Set(RoleCtx, claims.RoleName)
 	c.Next()
+}
+
+func isAdminMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		role, exists := c.Get(RoleCtx)
+		if !exists || role != constants.RoleAdmin {
+			response.AbortResponse(c, "permission denied")
+			return
+		}
+
+		c.Next()
+	}
+}
+
+func isCourierMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		role, exists := c.Get(RoleCtx)
+		if !exists || role != constants.RoleCourier {
+			response.AbortResponse(c, "permission denied")
+			return
+		}
+
+		c.Next()
+	}
+}
+
+func isCustomerMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		role, exists := c.Get(RoleCtx)
+		if !exists || role != constants.RoleCustomer {
+			response.AbortResponse(c, "permission denied")
+			return
+		}
+
+		c.Next()
+	}
 }
 
 func corsMiddleware() gin.HandlerFunc {

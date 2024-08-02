@@ -171,6 +171,16 @@ func (r *OrderRepo) GetList(pagination *models.Pagination, filters map[string]in
 		args = append(args, orderStatus)
 	}
 
+	if userId, ok := filters["user-id"]; ok {
+		counter++
+		filterClauses = append(filterClauses, "o.reciever_id = $"+strconv.Itoa(counter))
+		args = append(args, userId)
+
+		counter++
+		filterClauses = append(filterClauses, "o.status = $"+strconv.Itoa(counter))
+		args = append(args, constants.OrderStatusDelivered)
+	}
+
 	if len(filterClauses) > 0 {
 		countQuery += " AND " + strings.Join(filterClauses, " AND ")
 		query += " AND " + strings.Join(filterClauses, " AND ")
@@ -216,12 +226,6 @@ func (r *OrderRepo) GetList(pagination *models.Pagination, filters map[string]in
 }
 
 func (r *OrderRepo) UpdateById(order models.OrderUpdateRequest) error {
-	tx, err := r.db.Begin()
-	if err != nil {
-		r.log.Error(err)
-		return err
-	}
-
 	updateOrderQuery := `
 	UPDATE orders
 	SET
@@ -234,7 +238,7 @@ func (r *OrderRepo) UpdateById(order models.OrderUpdateRequest) error {
 	WHERE 
 		id = $1;`
 
-	if _, err = tx.Exec(updateOrderQuery,
+	if _, err := r.db.Exec(updateOrderQuery,
 		order.Id,
 		order.RecieverId,
 		order.CourierId,
@@ -244,38 +248,8 @@ func (r *OrderRepo) UpdateById(order models.OrderUpdateRequest) error {
 		order.Status,
 	); err != nil {
 		r.log.Error(err)
-		tx.Rollback()
 		return err
 	}
 
-	updateOrderProductQuery := `
-	UPDATE order_products
-	SET	
-		product_id = $2,
-		product_attributes = $3,
-		quantity = $4
-	WHERE 
-		order_id = $1;`
-
-	for _, product := range order.Products {
-		productAttributes, err := json.Marshal(product.Attributes)
-		if err != nil {
-			r.log.Error(err)
-			tx.Rollback()
-			return err
-		}
-
-		if _, err = tx.Exec(updateOrderProductQuery,
-			order.Id,
-			product.ProductId,
-			productAttributes,
-			product.Quantity,
-		); err != nil {
-			r.log.Error(err)
-			tx.Rollback()
-			return err
-		}
-	}
-
-	return tx.Commit()
+	return nil
 }

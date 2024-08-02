@@ -47,7 +47,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		ws.HandleWebSocket(c.Writer, c.Request)
 	})
 
-	api := router.Group("/api/v1", h.userIdentity) // , h.userIdentity
+	api := router.Group("/api/v1", h.userIdentity)
 	{
 		minio := api.Group("/minio")
 		{
@@ -56,58 +56,35 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 		user := api.Group("/users")
 		{
-			user.POST("", h.createUser)
 			user.GET("/me", h.getUserMe)
-		}
-
-		role := api.Group("/roles")
-		{
-			role.GET("", h.getListRole)
 		}
 
 		category := api.Group("/categories")
 		{
-			category.POST("", h.createCategory)
 			category.GET("", h.getListCategory)
 			category.GET("/:id", h.getCategoryById)
-			category.PUT("/:id", h.updateCategory)
-			category.DELETE("/:id", h.deleteCategory)
 		}
 
 		product := api.Group("/products")
 		{
-			product.POST("", h.createProduct)
 			product.GET("", h.getListProduct)
 			product.GET("/:id", h.getProductById)
-			product.PUT("/:id", h.updateProduct)
-			product.DELETE("/:id", h.deleteProduct)
-			product.POST("/:id/add/:attribute-id", h.addAttributeToProduct)
-			product.DELETE("/:id/remove/:attribute-id", h.removeAttributeFromProduct)
-
 		}
 
 		attribute := api.Group("/attributes")
 		{
-			attribute.POST("", h.createAttribute)
 			attribute.GET("", h.getListAttribute)
 			attribute.GET("/:id", h.getAttributeById)
-			attribute.PUT("/:id", h.updateAttribute)
-			attribute.DELETE("/:id", h.deleteAttribute)
 		}
 
 		option := attribute.Group("/:id/options")
 		{
-			option.POST("", h.createOption)
 			option.GET("", h.getListOption)
 			option.GET("/:option-id", h.getOptionById)
-			option.PUT("/:option-id", h.updateOption)
-			option.DELETE("/:option-id", h.deleteOption)
 		}
 
 		order := api.Group("/orders")
 		{
-			order.POST("", h.createOrder)
-			order.POST("/:id/receive-courier", h.receiveOrderCourier)
 			order.GET("", h.getListOrder)
 			order.GET("/:id", h.getOrderById)
 		}
@@ -117,6 +94,68 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			notification.POST("/customer", h.sendNotificationToCustomer)
 			notification.POST("/admin", h.sendNotificationToAdmin)
 			notification.POST("/courier", h.sendNotificationToCourier)
+		}
+	}
+
+	admin := api.Group("", isAdminMiddleware())
+	{
+		user := admin.Group("/users")
+		{
+			user.POST("", h.createUser)
+		}
+
+		role := admin.Group("/roles")
+		{
+			role.GET("", h.getListRole)
+		}
+
+		category := admin.Group("/categories")
+		{
+			category.POST("", h.createCategory)
+			category.PUT("/:id", h.updateCategory)
+			category.DELETE("/:id", h.deleteCategory)
+		}
+
+		product := admin.Group("/products")
+		{
+			product.POST("", h.createProduct)
+			product.PUT("/:id", h.updateProduct)
+			product.DELETE("/:id", h.deleteProduct)
+			product.POST("/:id/add/:attribute-id", h.addAttributeToProduct)
+			product.DELETE("/:id/remove/:attribute-id", h.removeAttributeFromProduct)
+		}
+
+		attribute := admin.Group("/attributes")
+		{
+			attribute.POST("", h.createAttribute)
+			attribute.PUT("/:id", h.updateAttribute)
+			attribute.DELETE("/:id", h.deleteAttribute)
+		}
+
+		option := attribute.Group("/:id/options")
+		{
+			option.POST("", h.createOption)
+			option.PUT("/:option-id", h.updateOption)
+			option.DELETE("/:option-id", h.deleteOption)
+		}
+	}
+
+	courier := api.Group("", isCourierMiddleware())
+	{
+		order := courier.Group("/orders")
+		{
+			order.POST("/:id/receive-courier", h.receiveOrderCourier)
+			order.POST("/:id/finish-courier", h.finishOrderCourier)
+			order.POST("/:id/payment-collect", h.paymentCollectOrderCourier)
+		}
+	}
+
+	customer := api.Group("", isCustomerMiddleware())
+	{
+		order := customer.Group("/orders")
+		{
+			order.POST("", h.createOrder)
+			order.GET("/history", h.getOrderHistory)
 		}
 	}
 

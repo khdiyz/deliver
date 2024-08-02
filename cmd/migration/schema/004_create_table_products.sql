@@ -6,7 +6,7 @@ CREATE TABLE "products" (
     "description" TEXT,
     "photo" VARCHAR(64),
     "price" INTEGER,
-    FOREIGN KEY ("category_id") REFERENCES "categories"("id")
+    FOREIGN KEY ("category_id") REFERENCES "categories"("id") ON DELETE CASCADE
 );
 
 -- +goose Down

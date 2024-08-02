@@ -10,8 +10,8 @@ CREATE TABLE "orders" (
     "address" TEXT,
     "status" order_status NOT NULL,
     "ordered_at" TIMESTAMP NOT NULL DEFAULT now(),
-    FOREIGN KEY ("courier_id") REFERENCES "users"("id"),
-    FOREIGN KEY ("reciever_id") REFERENCES "users"("id")
+    FOREIGN KEY ("courier_id") REFERENCES "users"("id") ON DELETE CASCADE,
+    FOREIGN KEY ("reciever_id") REFERENCES "users"("id") ON DELETE CASCADE
 );
 
 -- +goose Down

@@ -12,8 +12,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Pagination functions
-
 func listPagination(c *gin.Context) (pagination models.Pagination, err error) {
 	page, err := getPageQuery(c)
 	if err != nil {
@@ -66,21 +64,6 @@ func calculatePagination(page, pageSize int64) (offset, limit int64) {
 	return offset, limit
 }
 
-// User functions
-// func getUserId(c *gin.Context) (int64, error) {
-// 	id, ok := c.Get(userCtx)
-// 	if !ok {
-// 		return 0, errors.New("user id not found")
-// 	}
-
-// 	userId, ok := id.(int64)
-// 	if !ok {
-// 		return 0, errors.New("user id is of invalid type")
-// 	}
-
-// 	return userId, nil
-// }
-
 func getNullInt64Param(c *gin.Context, paramName string) (int64, error) {
 	paramData := c.Param(paramName)
 
@@ -95,21 +78,6 @@ func getNullInt64Param(c *gin.Context, paramName string) (int64, error) {
 
 	return 0, errors.New("param required")
 }
-
-// func getNullInt64Query(c *gin.Context, queryName string) (int64, error) {
-// 	queryData := c.Query(queryName)
-
-// 	if queryData != "" {
-// 		paramValue, err := strconv.ParseInt(queryData, 10, 64)
-// 		if err != nil {
-// 			return 0, fmt.Errorf("invalid query: %s", queryData)
-// 		}
-
-// 		return paramValue, nil
-// 	}
-
-// 	return 0, nil
-// }
 
 func getNullStringQuery(c *gin.Context, queryName string) string {
 	queryData := c.Query(queryName)

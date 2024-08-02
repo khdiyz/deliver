@@ -6,7 +6,6 @@ import (
 	"deliver/pkg/helper"
 	"deliver/pkg/validator"
 	"errors"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -62,7 +61,6 @@ func (h *Handler) createOrder(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path int64 true "Order Id"
-// @Param recieve body models.OrderCourierRequest true "Recieve Order"
 // @Success 200 {object} models.BaseResponse
 // @Failure 400 {object} models.BaseResponse
 // @Failure 404 {object} models.BaseResponse
@@ -70,8 +68,8 @@ func (h *Handler) createOrder(c *gin.Context) {
 // @Router /api/v1/orders/{id}/receive-courier [post]
 // @Security ApiKeyAuth
 func (h *Handler) receiveOrderCourier(c *gin.Context) {
-	var input models.OrderCourierRequest
-	if err := c.ShouldBindJSON(&input); err != nil {
+	userId, err := getUserId(c)
+	if err != nil {
 		response.ErrorResponse(c, response.BadRequest, err)
 		return
 	}
@@ -82,13 +80,14 @@ func (h *Handler) receiveOrderCourier(c *gin.Context) {
 		return
 	}
 
-	err = h.services.Order.ReceiveOrderCourier(orderId, input)
-	if err != nil {
+	if err = h.services.Order.ReceiveOrderCourier(orderId, userId); err != nil {
 		response.FromError(c, err)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": "order received by courier"})
+	response.SuccessResponse(c, response.OK, gin.H{
+		"status": "order received by courier",
+	}, nil)
 }
 
 // Get Order By Id
@@ -159,4 +158,115 @@ func (h *Handler) getListOrder(c *gin.Context) {
 	}
 
 	response.SuccessResponse(c, response.OK, orders, &pagination)
+}
+
+// Get List Order History
+// @Description Get List Order History
+// @Summary Get List Order History Customer
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Param pageSize query int64 true "pageSize" default(10)
+// @Param page  query int64 true "page" default(1)
+// @Success 200 {object} models.BaseResponse
+// @Failure 400 {object} models.BaseResponse
+// @Failure 404 {object} models.BaseResponse
+// @Failure 500 {object} models.BaseResponse
+// @Router /api/v1/orders/history [get]
+// @Security ApiKeyAuth
+func (h *Handler) getOrderHistory(c *gin.Context) {
+	pagination, err := listPagination(c)
+	if err != nil {
+		response.ErrorResponse(c, response.BadRequest, err)
+		return
+	}
+
+	userId, err := getUserId(c)
+	if err != nil {
+		response.ErrorResponse(c, response.BadRequest, err)
+		return
+	}
+
+	filters := make(map[string]interface{})
+	filters["user-id"] = userId
+
+	orders, err := h.services.Order.GetList(&pagination, filters)
+	if err != nil {
+		response.FromError(c, err)
+		return
+	}
+
+	response.SuccessResponse(c, response.OK, orders, &pagination)
+}
+
+// Finish Order
+// @Description Finish Order
+// @Summary Finish Order
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Order Id"
+// @Success 200 {object} models.BaseResponse
+// @Failure 400 {object} models.BaseResponse
+// @Failure 404 {object} models.BaseResponse
+// @Failure 500 {object} models.BaseResponse
+// @Router /api/v1/orders/{id}/finish-courier [post]
+// @Security ApiKeyAuth
+func (h *Handler) finishOrderCourier(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		response.ErrorResponse(c, response.BadRequest, err)
+		return
+	}
+
+	orderId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		response.ErrorResponse(c, response.BadRequest, err)
+		return
+	}
+
+	if err = h.services.Order.FinishOrderCourier(orderId, userId); err != nil {
+		response.FromError(c, err)
+		return
+	}
+
+	response.SuccessResponse(c, response.OK, gin.H{
+		"status": "order delivered by courier",
+	}, nil)
+}
+
+// Payment Collect Order
+// @Description Payment Collect Order
+// @Summary Payment Collect Order
+// @Tags Order
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Order Id"
+// @Success 200 {object} models.BaseResponse
+// @Failure 400 {object} models.BaseResponse
+// @Failure 404 {object} models.BaseResponse
+// @Failure 500 {object} models.BaseResponse
+// @Router /api/v1/orders/{id}/payment-collect [post]
+// @Security ApiKeyAuth
+func (h *Handler) paymentCollectOrderCourier(c *gin.Context) {
+	userId, err := getUserId(c)
+	if err != nil {
+		response.ErrorResponse(c, response.BadRequest, err)
+		return
+	}
+
+	orderId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		response.ErrorResponse(c, response.BadRequest, err)
+		return
+	}
+
+	if err = h.services.Order.PaymentCollectedOrderCourier(orderId, userId); err != nil {
+		response.FromError(c, err)
+		return
+	}
+
+	response.SuccessResponse(c, response.OK, gin.H{
+		"status": "payment collect by courier",
+	}, nil)
 }

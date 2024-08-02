@@ -74,13 +74,6 @@ definitions:
     required:
     - name
     type: object
-  models.OrderCourierRequest:
-    properties:
-      courier_id:
-        type: integer
-      status:
-        type: string
-    type: object
   models.OrderCreateRequest:
     properties:
       address:
@@ -1037,6 +1030,76 @@ paths:
       summary: Get Order By Id
       tags:
       - Order
+  /api/v1/orders/{id}/finish-courier:
+    post:
+      consumes:
+      - application/json
+      description: Finish Order
+      parameters:
+      - description: Order Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Finish Order
+      tags:
+      - Order
+  /api/v1/orders/{id}/payment-collect:
+    post:
+      consumes:
+      - application/json
+      description: Payment Collect Order
+      parameters:
+      - description: Order Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Payment Collect Order
+      tags:
+      - Order
   /api/v1/orders/{id}/receive-courier:
     post:
       consumes:
@@ -1048,12 +1111,6 @@ paths:
         name: id
         required: true
         type: integer
-      - description: Recieve Order
-        in: body
-        name: recieve
-        required: true
-        schema:
-          $ref: '#/definitions/models.OrderCourierRequest'
       produces:
       - application/json
       responses:
@@ -1076,6 +1133,48 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Recieve Order
+      tags:
+      - Order
+  /api/v1/orders/history:
+    get:
+      consumes:
+      - application/json
+      description: Get List Order History
+      parameters:
+      - default: 10
+        description: pageSize
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - default: 1
+        description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List Order History Customer
       tags:
       - Order
   /api/v1/products:

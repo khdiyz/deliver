@@ -96,8 +96,9 @@ type Option interface {
 
 type Order interface {
 	CreateOrder(input models.OrderCreateRequest) (int64, error)
-	ReceiveOrderCourier(orderId int64, input models.OrderCourierRequest) error
+	ReceiveOrderCourier(orderId, courierId int64) error
+	FinishOrderCourier(orderId, courierId int64) error
+	PaymentCollectedOrderCourier(orderId, courierId int64) error
 	GetById(id int64) (models.Order, error)
 	GetList(pagination *models.Pagination, filters map[string]interface{}) ([]models.Order, error)
-	// UpdateById(order models.OrderUpdateRequest) error
 }

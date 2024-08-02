@@ -33,8 +33,6 @@ type OrderUpdateRequest struct {
 	LocationY  float64 `json:"location_y"`
 	Address    string  `json:"address"`
 	Status     string  `json:"status"`
-
-	Products []OrderProductCreateRequest `json:"products"`
 }
 
 type OrderProduct struct {
