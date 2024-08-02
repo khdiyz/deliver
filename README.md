@@ -1,6 +1,3 @@
-Here's a basic `README.md` file for your GitHub repository that includes instructions for building and running your Docker containers with `docker-compose`:
-
-```markdown
 # Food Delivery Service
 
 ## Overview
@@ -41,13 +38,6 @@ Make sure you have Docker and Docker Compose installed on your system. You can d
 
    This command will start your application and any associated services defined in your `docker-compose.yml` file.
 
-## Usage
-
-Provide instructions for using your application once the containers are running. This might include accessing the web application via a browser or making API requests.
-
-## Configuration
-
-List any configuration options or environment variables that users may need to set up. 
 
 ## Stopping the Containers
 
