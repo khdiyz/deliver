@@ -44,7 +44,7 @@ func (r *OptionRepo) GetList(pagination *models.Pagination, filters map[string]i
 		counter       int
 	)
 
-	countQuery := "SELECT count(id) FROM options WHERE TRUE "
+	countQuery := "SELECT count(id) FROM options WHERE true "
 
 	query := `
 	SELECT

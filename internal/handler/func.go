@@ -96,20 +96,20 @@ func getNullInt64Param(c *gin.Context, paramName string) (int64, error) {
 	return 0, errors.New("param required")
 }
 
-func getNullInt64Query(c *gin.Context, queryName string) (int64, error) {
-	queryData := c.Query(queryName)
+// func getNullInt64Query(c *gin.Context, queryName string) (int64, error) {
+// 	queryData := c.Query(queryName)
 
-	if queryData != "" {
-		paramValue, err := strconv.ParseInt(queryData, 10, 64)
-		if err != nil {
-			return 0, fmt.Errorf("invalid query: %s", queryData)
-		}
+// 	if queryData != "" {
+// 		paramValue, err := strconv.ParseInt(queryData, 10, 64)
+// 		if err != nil {
+// 			return 0, fmt.Errorf("invalid query: %s", queryData)
+// 		}
 
-		return paramValue, nil
-	}
+// 		return paramValue, nil
+// 	}
 
-	return 0, nil
-}
+// 	return 0, nil
+// }
 
 func getNullStringQuery(c *gin.Context, queryName string) string {
 	queryData := c.Query(queryName)

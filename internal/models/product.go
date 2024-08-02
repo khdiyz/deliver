@@ -39,8 +39,8 @@ type ProductAttribute struct {
 }
 
 type AttributeAndOption struct {
-	AttributeId int64 `json:"attribute_id"`
-	OptionId    int64 `json:"option_id"`
+	Attribute string `json:"attribute"`
+	Option    string `json:"option"`
 }
 
 type AddToCart struct {

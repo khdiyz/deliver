@@ -107,6 +107,16 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		order := api.Group("/orders")
 		{
 			order.POST("", h.createOrder)
+			order.POST("/:id/receive-courier", h.receiveOrderCourier)
+			order.GET("", h.getListOrder)
+			order.GET("/:id", h.getOrderById)
+		}
+
+		notification := api.Group("/notifications")
+		{
+			notification.POST("/customer", h.sendNotificationToCustomer)
+			notification.POST("/admin", h.sendNotificationToAdmin)
+			notification.POST("/courier", h.sendNotificationToCourier)
 		}
 	}
 

@@ -83,4 +83,7 @@ type ProductAttribute interface {
 
 type Order interface {
 	Create(order models.OrderCreateRequest) (int64, error)
+	GetById(id int64) (models.Order, error)
+	GetList(pagination *models.Pagination, filters map[string]interface{}) ([]models.Order, error)
+	UpdateById(order models.OrderUpdateRequest) error
 }

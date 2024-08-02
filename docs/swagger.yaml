@@ -2,10 +2,10 @@ basePath: /
 definitions:
   models.AttributeAndOption:
     properties:
-      attribute_id:
-        type: integer
-      option_id:
-        type: integer
+      attribute:
+        type: string
+      option:
+        type: string
     type: object
   models.AttributeCreateRequest:
     properties:
@@ -73,6 +73,13 @@ definitions:
         type: string
     required:
     - name
+    type: object
+  models.OrderCourierRequest:
+    properties:
+      courier_id:
+        type: integer
+      status:
+        type: string
     type: object
   models.OrderCreateRequest:
     properties:
@@ -910,6 +917,56 @@ paths:
       tags:
       - Minio
   /api/v1/orders:
+    get:
+      consumes:
+      - application/json
+      description: Get List Order
+      parameters:
+      - default: 10
+        description: pageSize
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - default: 1
+        description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: status
+        enum:
+        - picked_up
+        - on_delivery
+        - delivered
+        - payment_collected
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List Order
+      tags:
+      - Order
     post:
       consumes:
       - application/json
@@ -943,6 +1000,82 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Create Order
+      tags:
+      - Order
+  /api/v1/orders/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get Order By Id
+      parameters:
+      - description: Order Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Order By Id
+      tags:
+      - Order
+  /api/v1/orders/{id}/receive-courier:
+    post:
+      consumes:
+      - application/json
+      description: Recieve Order
+      parameters:
+      - description: Order Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Recieve Order
+        in: body
+        name: recieve
+        required: true
+        schema:
+          $ref: '#/definitions/models.OrderCourierRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Recieve Order
       tags:
       - Order
   /api/v1/products:
