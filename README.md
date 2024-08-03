@@ -48,3 +48,7 @@ docker-compose down
 ```
 
 This command will stop and remove the containers.
+
+## Diagram of the project
+
+https://dbdiagram.io/d/food-delivery-66abf5e28b4bb5230e006757
