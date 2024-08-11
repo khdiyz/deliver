@@ -1,9 +1,5 @@
 # Food Delivery Service
 
-## Overview
-
-Demo: http://159.65.127.115:4040/docs/index.html
-
 ## Prerequisites
 
 - Docker
